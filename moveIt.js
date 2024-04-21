@@ -3,17 +3,17 @@ var ctx = canvas.getContext("2d");
 
 var ball_radius = 50;
 var ball_Y_space = 110;
-var ball_speed = 10;
+var ball_speed = 300;
 var currentBallToMove = 0;
 
 var ballPositionList = [ball_radius, ball_radius, ball_radius];
 var completeFlag = false;
 
-function move()
+function move(delta)
 {
     if(ballPositionList[currentBallToMove]<canvas.width-ball_radius)
     {
-        ballPositionList[currentBallToMove]+=ball_speed;
+        ballPositionList[currentBallToMove]+=ball_speed * delta;
         return;
     }
 
@@ -61,13 +61,18 @@ function reset(){
     completeFlag = false;   
 }
 
-function gameLoop() {
-    // console.log("tick");
-    move();
+let deltaTime = 0;
+let lastDrawTime=0;
+function gameLoop(drawTime) {
+    
+    drawTime *= 0.001;
+    deltaTime = drawTime - lastDrawTime;
+    lastDrawTime = drawTime;
+    move(deltaTime);
     draw();
     requestAnimationFrame(gameLoop);
 }
 
 
 // console.log("start loop");
-gameLoop();
+requestAnimationFrame(gameLoop);
